@@ -12,10 +12,10 @@ def corrupt_mnist_img(rng, img, value):
     :return: modified image
     """
     # Choose square size
-    s = rng.randint(7, 14)
+    s = rng.randint(7, 15)
     # Choose top-left corner position
-    x = rng.randint(0, 28 - s)
-    y = rng.randint(0, 28 - s)
+    x = rng.randint(0, 29 - s)
+    y = rng.randint(0, 29 - s)
     # Draw square
     img[..., y:y + s, x:x + s] = value
     # Return object for convenience
