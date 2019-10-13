@@ -71,7 +71,7 @@ The baseline is the number to beat.
 #### Keras
 ```python
 from keras.datasets import mnist
-from hw2.bechmark_keras import test_model
+from hw2.benchmark_keras import test_model
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -86,7 +86,7 @@ test_model(model, x_test, y_test, batch_size=100)
 #### PyTorch
 ```python
 from torchvision import datasets, transforms
-from hw2.bechmark_torch import test_model
+from hw2.benchmark_torch import test_model
 
 data = datasets.MNIST('../data', train=False, download=True,
                         transform=transforms.ToTensor()),
