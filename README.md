@@ -5,7 +5,7 @@ Shared code for the EE 298Z - Deep Learning class
 
 ### Python Packages Required
 - ```scikit-image``` >= 0.15.0
-- ```tensorflow``` >= 2.0.0 *or* ```tensorflow``` = 1.15.0 + ```Keras``` => 2.3.0
+- ```tensorflow``` >= 2.0.0 *or* ```tensorflow``` = 1.14.0 + ```Keras``` => 2.3.0
 - ```torch``` >= 1.1.0
 
 ### Dataset Generation for Training
@@ -68,7 +68,7 @@ data = datasets.MNIST('../data', train=True, download=True,
 | Metric | Min | Max | Baseline | Description |
 | ------ | --- | --- | -------- | ----------- |
 | Classifier Score | `0` | `100` | `78.13` (PyTorch) / `78.36` (Keras) | Measures quality of inpainting |
-| SSIM Score | `0` | `100` | `75` | Measures capability to detect and preserve uncorrupted pixels |
+| SSIM Score | `0` | `100` | `75.00` | Measures capability to detect and preserve uncorrupted pixels |
 
 The baselines are the numbers to beat.
 
