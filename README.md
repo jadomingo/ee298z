@@ -3,8 +3,10 @@ Shared code for the EE 298Z - Deep Learning class
 
 ## Homework 2: Image Restoration using Autoencoders
 
-### Additional Python Packages Required
+### Python Packages Required
 - ```scikit-image``` >= 0.15.0
+- ```tensorflow``` >= 2.0.0 *or* ```tensorflow``` = 1.15.0 + ```Keras``` => 2.3.0
+- ```torch``` >= 1.1.0
 
 ### Dataset Generation for Training
 
@@ -12,7 +14,8 @@ Shared code for the EE 298Z - Deep Learning class
 
 ##### Generate corrupted copy (easier)
 ```python
-from keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
+from tensroflow.keras import backend as K
 from hw2.transforms import corrupt_mnist_copy
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -20,18 +23,19 @@ from hw2.transforms import corrupt_mnist_copy
 x_train_corrupted = corrupt_mnist_copy(x_train)
 
 # Scale to [0, 1]
-x_train /= 255
-x_train_corrupted /= 255
+x_train = x_train.astype(K.floatx()) / 255.
+x_train_corrupted = x_train_corrupted.astype(K.floatx()) / 255.
 ```
 
 ##### Corrupt images on-the-fly
 ```python
-from keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
+from tensroflow.keras import backend as K
 from hw2.transforms import corrupt_mnist_generator
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # Scale to [0, 1]
-x_train /= 255
+x_train = x_train.astype(K.floatx()) / 255.
 
 x_train_corrupted_gen = corrupt_mnist_generator(x_train, value=1.)
 
@@ -63,20 +67,21 @@ data = datasets.MNIST('../data', train=True, download=True,
 #### Metrics
 | Metric | Min | Max | Baseline | Description |
 | ------ | --- | --- | -------- | ----------- |
-| Classifier Score | `0` | `100` | `78.49` (PyTorch) / `77.33` (Keras) | Measures quality of inpainting |
-| SSIM Score | `0` | `100` | `50` | Measures capability to detect and preserve uncorrupted pixels |
+| Classifier Score | `0` | `100` | `78.13` (PyTorch) / `78.36` (Keras) | Measures quality of inpainting |
+| SSIM Score | `0` | `100` | `75` | Measures capability to detect and preserve uncorrupted pixels |
 
-The baseline is the number to beat.
+The baselines are the numbers to beat.
 
 #### Keras
 ```python
-from keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
+from tensroflow.keras import backend as K
 from hw2.benchmark_keras import test_model
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 # Scale to [0, 1]
-x_test = x_test / 255
+x_test = x_test.astype(K.floatx()) / 255.
 
 # model is your Keras model
 # DO NOT convert y_test, i.e. don't use keras.utils.to_categorical()
@@ -85,11 +90,10 @@ test_model(model, x_test, y_test, batch_size=100)
 
 #### PyTorch
 ```python
-from torchvision import datasets, transforms
+from torchvision import datasets
 from hw2.benchmark_torch import test_model
 
-data = datasets.MNIST('../data', train=False, download=True,
-                        transform=transforms.ToTensor()),
+data = datasets.MNIST('../data', train=False, download=True)
 
 # model is your PyTorch model
 test_model(model, data, batch_size=100)
@@ -97,6 +101,6 @@ test_model(model, data, batch_size=100)
 
 #### Sample Benchmark Output
 ```
-Classifier score: 78.49
+Classifier score: 78.13
 SSIM score: 100.00
 ```
