@@ -1,27 +1,26 @@
 from __future__ import print_function
-import keras
-from keras.callbacks import ModelCheckpoint
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
-from keras import backend as K
+try:
+    from tensorflow import keras
+    from tensorflow.keras import backend as K
+except ImportError:
+    import keras
+    from keras import backend as K
 
 # input image dimensions
 img_rows, img_cols = 28, 28
 num_classes = 10
 input_shape = (1, img_rows, img_cols) if K.image_data_format() == 'channels_first' else (img_rows, img_cols, 1)
 
-model = Sequential([
-    Conv2D(32, 5, activation='relu', input_shape=input_shape),
-    MaxPooling2D(),
-    Conv2D(64, 5, activation='relu'),
-    MaxPooling2D(),
-    Flatten(),
-    Dropout(0.5),
-    Dense(600, activation='relu'),
-    Dropout(0.5),
-    Dense(num_classes, activation='softmax'),
+model = keras.models.Sequential([
+    keras.layers.Conv2D(32, 5, activation='relu', input_shape=input_shape),
+    keras.layers.MaxPooling2D(),
+    keras.layers.Conv2D(64, 5, activation='relu'),
+    keras.layers.MaxPooling2D(),
+    keras.layers.Flatten(),
+    keras.layers.Dropout(0.5),
+    keras.layers.Dense(600, activation='relu'),
+    keras.layers.Dropout(0.5),
+    keras.layers.Dense(num_classes, activation='softmax'),
 ])
 
 
@@ -30,7 +29,7 @@ def main():
     epochs = 100
 
     # the data, split between train and test sets
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
     if K.image_data_format() == 'channels_first':
         x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -61,7 +60,7 @@ def main():
 
     model.summary()
 
-    checkpoint = ModelCheckpoint('mnist_cnn.h5',
+    checkpoint = keras.callbacks.ModelCheckpoint('mnist_cnn.h5',
                                  verbose=1, save_best_only=True, save_weights_only=True)
 
     model.compile(loss=keras.losses.categorical_crossentropy,
