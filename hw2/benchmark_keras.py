@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import numpy as np
 try:
-    from tensorflow import keras
-    from tensorflow.keras import backend as K
-except ImportError:
     import keras
     from keras import backend as K
+except ImportError:
+    from tensorflow import keras
+    from tensorflow.keras import backend as K
 
 from classifier_keras import model as classifier
 from structural_similarity import structural_similarity as ssim
@@ -88,19 +88,24 @@ def test_model(model, x_test, y_test, batch_size=100):
         correct_score += int(correct.sum())
 
         # Compute SSIM over the uncorrupted pixels
-        ssim_score += ssim(imgs_orig[~masks], imgs_restored[~masks])
+        imgs_orig[masks] = 0.
+        imgs_restored[masks] = 0.
+        imgs_orig = imgs_orig.squeeze()
+        imgs_restored = imgs_restored.squeeze()
+        for j in range(batch_size):
+            ssim_score += ssim(imgs_orig[j], imgs_restored[j])
 
     classifier_score = correct_score / baseline_score
-    ssim_score /= num_batches
+    ssim_score /= N
 
     print('Classifier score: {:.2f}\nSSIM score: {:.2f}'.format(100 * classifier_score, 100 * ssim_score))
 
 
 if __name__ == '__main__':
     try:
-        from tensorflow.keras.datasets import mnist
-    except ImportError:
         from keras.datasets import mnist
+    except ImportError:
+        from tensorflow.keras.datasets import mnist
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     model = IdentityModel()
     x_test = x_test / 255

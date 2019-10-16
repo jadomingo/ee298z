@@ -57,9 +57,9 @@ def test_model(model, dataset, batch_size=100):
             # Choose top-left corner position
             x = rng.randint(0, 29 - s)
             y = rng.randint(0, 29 - s)
-            mask = torch.zeros(imgs_orig.shape[1:], dtype=torch.uint8)
+            mask = torch.zeros(imgs_orig.shape[1:], dtype=torch.bool)
             # Set mask area
-            mask[y:y + s, x:x + s] = 1
+            mask[y:y + s, x:x + s] = True
             masks.append(mask)
         masks = torch.stack(masks).to(device)
 
@@ -87,10 +87,15 @@ def test_model(model, dataset, batch_size=100):
         correct_score += int(correct.sum())
 
         # Compute SSIM over the uncorrupted pixels
-        ssim_score += ssim(imgs_orig[~masks].cpu().numpy(), imgs_restored[~masks].cpu().numpy())
+        imgs_orig[masks] = 0.
+        imgs_restored[masks] = 0.
+        imgs_orig = imgs_orig.squeeze().cpu().numpy()
+        imgs_restored = imgs_restored.squeeze().cpu().numpy()
+        for j in range(batch_size):
+            ssim_score += ssim(imgs_orig[j], imgs_restored[j])
 
     classifier_score = correct_score / baseline_score
-    ssim_score /= num_batches
+    ssim_score /= N
 
     print('Classifier score: {:.2f}\nSSIM score: {:.2f}'.format(100 * classifier_score, 100 * ssim_score))
 

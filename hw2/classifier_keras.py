@@ -1,10 +1,10 @@
 from __future__ import print_function
 try:
-    from tensorflow import keras
-    from tensorflow.keras import backend as K
-except ImportError:
     import keras
     from keras import backend as K
+except ImportError:
+    from tensorflow import keras
+    from tensorflow.keras import backend as K
 
 # input image dimensions
 img_rows, img_cols = 28, 28
