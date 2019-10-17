@@ -1,3 +1,4 @@
+"""Source: https://github.com/scikit-image/scikit-image/blob/master/skimage/metrics/_structural_similarity.py"""
 from warnings import warn
 import numpy as np
 from scipy.ndimage import uniform_filter, gaussian_filter

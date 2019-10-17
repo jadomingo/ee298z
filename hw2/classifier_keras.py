@@ -1,3 +1,6 @@
+"""Based on: https://github.com/keras-team/keras/blob/master/examples/mnist_cnn.py
+Changed classifier architecture to mirror the PyTorch implementation.
+"""
 from __future__ import print_function
 try:
     import keras

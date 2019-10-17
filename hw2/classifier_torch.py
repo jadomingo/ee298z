@@ -1,3 +1,6 @@
+"""Source: https://github.com/pytorch/examples/blob/master/mnist/main.py
+Slightly improved performance by adding dropout and more units.
+"""
 from __future__ import print_function
 import sys
 import argparse
