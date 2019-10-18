@@ -37,7 +37,7 @@ def test_model(model, x_test, y_test, batch_size=100):
     """
     rng = np.random.RandomState(0)
 
-    classifier.load_weights('mnist_cnn.h5')
+    classifier.load_weights('hw2\mnist_cnn.h5')
 
     baseline_score = 0
     correct_score = 0
